@@ -30,18 +30,19 @@ jobs:
             ${{ env.IMAGE }}:latest
             ${{ env.IMAGE }}:${{ env.TAG }}
 
-deploy_to_kubernetes:
-  needs: build_and_push
-  runs-on: self-hosted
-  env:
-    IMAGE: raedbari/node.js
-    TAG: ${{ github.sha }}
-    NAMESPACE: project-env        # ← بدّل إلى project-env
-    DEPLOYMENT: project-dep       # ← بدّل إلى project-dep
-    CONTAINER: nodejs             # ← اسم الحاوية داخل الـDeployment
-  steps:
-    - name: Update Deployment image and rollout
-      run: |
-        kubectl -n "$NAMESPACE" set image deployment/"$DEPLOYMENT" \
-          "$CONTAINER"=${IMAGE}:${TAG}
-        kubectl -n "$NAMESPACE" rollout status deployment/"$DEPLOYMENT" --timeout=180s
+  deploy_to_kubernetes:
+    needs: build_and_push
+    runs-on: self-hosted
+    env:
+      IMAGE: raedbari/node.js
+      TAG: ${{ github.sha }}
+      NAMESPACE: project-env
+      DEPLOYMENT: project-dep
+      CONTAINER: nodejs
+    steps:
+      - name: Update Deployment image and rollout
+        run: |
+          kubectl -n "$NAMESPACE" set image deployment/"$DEPLOYMENT" \
+            "$CONTAINER"=${IMAGE}:${TAG}
+          kubectl -n "$NAMESPACE" rollout status deployment/"$DEPLOYMENT" --timeout=180s
+          kubectl -n "$NAMESPACE" get deploy "$DEPLOYMENT" -o=jsonpath='{.spec.template.spec.containers[0].image}'; echo
