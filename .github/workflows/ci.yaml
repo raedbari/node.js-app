@@ -37,7 +37,7 @@ jobs:
       IMAGE: raedbari/node.js
       TAG: ${{ github.sha }}
       NAMESPACE: default        
-      DEPLOYMENT: sample-app     
+      DEPLOYMENT: project-dep
     steps:
       - name: Update Deployment image and rollout
         run: |
