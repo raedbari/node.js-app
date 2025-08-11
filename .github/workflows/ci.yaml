@@ -36,7 +36,7 @@ jobs:
     env:
       IMAGE: raedbari/node.js
       TAG: ${{ github.sha }}
-      NAMESPACE: default        
+      NAMESPACE: project-env        
       DEPLOYMENT: project-dep
     steps:
       - name: Update Deployment image and rollout
