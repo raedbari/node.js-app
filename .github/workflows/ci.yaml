@@ -12,7 +12,6 @@ jobs:
       TAG: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
-
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
 
@@ -33,15 +32,16 @@ jobs:
 
   deploy_to_kubernetes:
     needs: build_and_push
-    runs-on: self-hosted  
+    runs-on: self-hosted
     env:
       IMAGE: raedbari/node.js
       TAG: ${{ github.sha }}
-      NAMESPACE: app
-      DEPLOYMENT: sample-app
+      NAMESPACE: default        
+      DEPLOYMENT: sample-app     
     steps:
       - name: Update Deployment image and rollout
         run: |
           kubectl -n "$NAMESPACE" set image deployment/"$DEPLOYMENT" \
             "$DEPLOYMENT"=${IMAGE}:${TAG}
           kubectl -n "$NAMESPACE" rollout status deployment/"$DEPLOYMENT" --timeout=180s
+          kubectl -n "$NAMESPACE" get deploy "$DEPLOYMENT" -o=jsonpath='{.spec.template.spec.containers[0].image}'; echo
