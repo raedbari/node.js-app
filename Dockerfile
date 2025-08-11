@@ -6,7 +6,7 @@ RUN npm ci
 COPY . .
 RUN npm run build || true
 
-# Runtime stage
+# Runtime  stage
 FROM node:18-alpine
 WORKDIR /app
 ENV NODE_ENV=production
