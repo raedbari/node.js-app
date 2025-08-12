@@ -8,7 +8,7 @@ app.get('/', (_req, res) => {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Smart DevOps Project</title>
+  <title>Smart DevOps Deployment Project</title>
   <style>
     :root{
       --bg: #0b1020;
@@ -165,7 +165,11 @@ app.get('/', (_req, res) => {
         <div class="card"><span class="dot"></span><span class="tool">Kubernetes</span></div>
         <div class="card"><span class="dot"></span><span class="tool">GitHub Actions</span></div>
         <div class="card"><span class="dot"></span><span class="tool">Prometheus</span></div>
+        <div class="card"><span class="dot"></span><span class="tool">Grafana</span></div>
         <div class="card"><span class="dot"></span><span class="tool">Loki</span></div>
+        <div class="card"><span class="dot"></span><span class="tool">Ansible</span></div>
+        <div class="card"><span class="dot"></span><span class="tool">Chaos Mesh</span></div>
+       
       </div>
 
       <p class="footer">Deployed via Kubernetes • Listening on port \${PORT}</p>
