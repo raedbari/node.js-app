@@ -155,9 +155,9 @@ app.get('/', (_req, res) => {
       </div>
 
       <h1 class="title">
-        Welcome to our <span class="hl">smart DevOps project</span>
+        Welcome to our <span class="hl">Smart DevOps Deployment project</span>
       </h1>
-      <p class="subtitle">Continuous Integration → Containerization → Orchestrated Delivery → Observability</p>
+      <p class="subtitle">Continuous Integration → Containerization → Orchestrated Delivery → Observability → Monitoring → Resilience Testing</p>
 
       <div class="cards" aria-label="DevOps toolchain">
         <div class="card"><span class="dot"></span><span class="tool">Terraform</span></div>
