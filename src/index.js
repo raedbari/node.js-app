@@ -59,6 +59,7 @@ app.get('/', (req, res) => {
 </html>`);
 });
 
-app.listen(PORT, () => {
-  console.log(\`Server is running on port \${PORT}\`);
+// استمع على 0.0.0.0 داخل الكونتينر
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is running on port ${PORT}`);
 });
