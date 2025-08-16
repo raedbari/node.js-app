@@ -5,6 +5,10 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
@@ -14,10 +18,11 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      image_digest: ${{ steps.build.outputs.digest }}   
     steps:
       - uses: actions/checkout@v4
 
-    
       - uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
@@ -27,6 +32,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build and push image (with cache)
+        id: build                                   
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -44,10 +50,10 @@ jobs:
 
   deploy_to_kubernetes:
     needs: build_and_push
-    runs-on: self-hosted          
+    runs-on: self-hosted
     env:
       IMAGE: raedbari/node.js
-      TAG: ${{ github.sha }}
+      IMAGE_DIGEST: ${{ needs.build_and_push.outputs.image_digest }}  
       NAMESPACE: project-env
       DEPLOYMENT: project-dep
       CONTAINER: nodejs
@@ -55,18 +61,19 @@ jobs:
       - name: Set strict bash flags
         run: set -euo pipefail
 
-      - name: Update Deployment image and rollout
+      - name: Update Deployment image by digest and rollout
         run: |
          
           kubectl -n "$NAMESPACE" set image deployment/"$DEPLOYMENT" \
-            "$CONTAINER"=${IMAGE}:${TAG}
+            "$CONTAINER"=${IMAGE}@${IMAGE_DIGEST}
 
          
           kubectl -n "$NAMESPACE" annotate deployment/"$DEPLOYMENT" \
-            ci.commit=${GITHUB_SHA} --overwrite
+            ci.commit=${GITHUB_SHA} ci.digest=${IMAGE_DIGEST} --overwrite
 
-         
+      
           kubectl -n "$NAMESPACE" rollout status deployment/"$DEPLOYMENT" --timeout=300s
+
+     
           echo -n "Deployed image: "
-          kubectl -n "$NAMESPACE" get deploy "$DEPLOYMENT" -o=jsonpath='{.spec.template.spec.containers[0].image}'
-          echo
+          kubectl -n "$NAMESPACE" get deploy "$DEPLOYMENT" -o=jsonpath='{.spec.template.spec.conta
