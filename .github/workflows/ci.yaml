@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE: raedbari/node.js
-      TAG: ${{ github.sha }}                 # نفس الوسم سيُستخدم في النشر
+      TAG: ${{ github.sha }}                
     permissions:
       contents: read
     steps:
@@ -33,14 +33,14 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.IMAGE }}:${{ env.TAG }}  # يبني ويدفع الصورة بوسم SHA
+            ${{ env.IMAGE }}:${{ env.TAG }}  
 
   deploy_to_kubernetes:
     needs: build_and_push
     runs-on: self-hosted
     env:
       IMAGE: raedbari/node.js
-      TAG: ${{ github.sha }}                 # ينشر بنفس وسم البناء
+      TAG: ${{ github.sha }}                
       NAMESPACE: project-env
       DEPLOYMENT: project-dep
       CONTAINER: nodejs
