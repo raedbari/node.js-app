@@ -15,18 +15,14 @@
 # COPY --from=build /app /app
 # EXPOSE 3000
 # CMD ["npm", "start"]
-
 FROM node:20-alpine
 
-# أمان: مستخدم غير root
 RUN addgroup -S nodegrp && adduser -S nodeusr -G nodegrp
 WORKDIR /app
 
-# تثبيت الاعتمادات (إنتاج فقط)
 COPY package*.json ./
 RUN npm ci --omit=dev
 
-# نسخ السورس فقط
 COPY src/ ./src/
 
 ENV NODE_ENV=production
@@ -39,4 +35,3 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
   CMD wget -qO- "http://127.0.0.1:${PORT}/healthz" >/dev/null || exit 1
 
 CMD ["npm", "start"]
-
