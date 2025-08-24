@@ -6,8 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ===== Prometheus metrics =====
-client.collectDefaultMetrics({ prefix: 'app_' }); // مقاييس افتراضية مع بادئة واضحة
-
+client.collectDefaultMetrics({ prefix: 'app_' }); 
 // عدّاد للطلبات حسب المنهج/المسار/الحالة
 const httpRequestsTotal = new client.Counter({
   name: 'http_requests_total',
