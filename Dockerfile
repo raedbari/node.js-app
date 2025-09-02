@@ -17,6 +17,7 @@
 # CMD ["npm", "start"]
 
 
+
 FROM node:20-alpine
 
 RUN addgroup -g 1001 -S appgrp \
